@@ -16,32 +16,26 @@ public:
         if(root == NULL) return ans;
         queue<TreeNode*> q;
         q.push(root);
-        bool leftToRight = true;
+        bool zigZag = true;
 
         while(!q.empty()){
             int n = q.size();
             vector<int> temp(n);
-
-            for(int i  = 0; i<n; i++){
-                TreeNode* front = q.front();
+            for(int i = 0; i<n; i++){
+                TreeNode* temp1 = q.front();
                 q.pop();
-
-                int idx = (leftToRight)? i : n-i-1;
-
-                temp[idx] = front->val;
-
-                if(front->left){
-                    q.push(front->left);
-                } 
-                if(front->right){
-                    q.push(front->right);
-                } 
+                int idx = zigZag? i : n-i-1;
+                temp[idx] = temp1->val;
+                if(temp1->left){
+                    q.push(temp1->left);
+                }
+                if(temp1->right){
+                    q.push(temp1->right);
+                }
             }
-
-            leftToRight = !leftToRight;
-            ans.push_back({temp});
+            zigZag = !zigZag;
+            ans.push_back(temp);
         }
-
         return ans;
     }
 };
