@@ -9,6 +9,7 @@
  */
 class Solution {
 public:
+// mark all the child nodes wrt the parent nodes
     void markParents(TreeNode* root, unordered_map<TreeNode*, TreeNode*>& parentTrack, TreeNode* target){
         queue<TreeNode*> q;
         q.push(root);
@@ -30,6 +31,7 @@ public:
         markParents(root,parentTrack,target);
         vector<int> ans;
         if(root == NULL) return ans;
+        //maintain a map which stores which node is visited and not
         unordered_map<TreeNode*, bool> m;
         queue<TreeNode*> q;
         m[target] = true;
@@ -41,6 +43,7 @@ public:
             for(int i = 0; i<sz; i++){
                 TreeNode* frontNode = q.front();
                 q.pop();
+                //check if there is a next or prev node and wether it is visited or not
                 if(frontNode->left && !m[frontNode->left]){
                     q.push(frontNode->left);
                     m[frontNode->left] = true;
@@ -55,7 +58,8 @@ public:
                 }
             }
         }
-
+        // once you hit currLvl = k you will break thru the above loop but the queue won't be empty so for that
+        // mean the queue has the resulting elements which are at a distance k from target....now push them in ans
         while(!q.empty()){
             TreeNode* front = q.front();
             q.pop();
