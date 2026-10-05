@@ -11,14 +11,25 @@
  */
 class Solution {
 public:
-    bool fillMap(TreeNode* root, int k, unordered_set<int>& s){
-        if(!root) return false;
-        if(s.find(root->val) != s.end()) return true;
-        s.insert(k - root->val);
-        return fillMap(root->left, k, s) || fillMap(root->right, k, s);
-    }
     bool findTarget(TreeNode* root, int k) {
-        unordered_set<int> s;
-        return fillMap(root, k, s);
+        if (!root) return false;
+
+        stack<TreeNode*> L, R;   // L walks smallest -> larger, R walks largest -> smaller
+        for (TreeNode* p = root; p; p = p->left)  L.push(p);
+        for (TreeNode* p = root; p; p = p->right) R.push(p);
+
+        while (L.top() != R.top()) {
+            int sum = L.top()->val + R.top()->val;
+            if (sum == k) return true;
+
+            if (sum < k) {                      // need a bigger sum: advance left pointer
+                TreeNode* n = L.top(); L.pop();
+                for (TreeNode* p = n->right; p; p = p->left) L.push(p);
+            } else {                            // need a smaller sum: advance right pointer
+                TreeNode* n = R.top(); R.pop();
+                for (TreeNode* p = n->left; p; p = p->right) R.push(p);
+            }
+        }
+        return false;
     }
 };
