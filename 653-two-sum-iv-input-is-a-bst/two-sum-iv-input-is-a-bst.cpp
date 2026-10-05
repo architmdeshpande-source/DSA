@@ -12,22 +12,23 @@
 class Solution {
 public:
     bool findTarget(TreeNode* root, int k) {
-        if (!root) return false;
+        if(!root) return false;
+        stack<TreeNode*> left, right;
 
-        stack<TreeNode*> L, R;   // L walks smallest -> larger, R walks largest -> smaller
-        for (TreeNode* p = root; p; p = p->left)  L.push(p);
-        for (TreeNode* p = root; p; p = p->right) R.push(p);
+        for(TreeNode* p = root; p; p = p->left) left.push(p); // push all xtreme left nodes
+        for(TreeNode* p = root; p; p = p->right) right.push(p); // push all xtreme right nodes
 
-        while (L.top() != R.top()) {
-            int sum = L.top()->val + R.top()->val;
-            if (sum == k) return true;
-
-            if (sum < k) {                      // need a bigger sum: advance left pointer
-                TreeNode* n = L.top(); L.pop();
-                for (TreeNode* p = n->right; p; p = p->left) L.push(p);
-            } else {                            // need a smaller sum: advance right pointer
-                TreeNode* n = R.top(); R.pop();
-                for (TreeNode* p = n->left; p; p = p->right) R.push(p);
+        while(left.top()!=right.top()){
+            int sum = left.top()->val + right.top()->val;
+            if(sum == k) return true;
+            else if(sum<k){
+                TreeNode* n = left.top();
+                left.pop();
+                for(TreeNode* p = n->right; p; p = p->left) left.push(p); // next in the inorders right all elements
+            }else{
+                TreeNode* n = right.top();
+                right.pop();
+                for(TreeNode* p = n->left; p; p = p->right) right.push(p);// next in the inorders left all elements
             }
         }
         return false;
