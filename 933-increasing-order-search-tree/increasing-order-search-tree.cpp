@@ -10,26 +10,25 @@
  * };
  */
 class Solution {
+    TreeNode* head = NULL;
+    TreeNode* prev = NULL;
 public:
-    vector<int> inorder(TreeNode* root, vector<int>& nums){
-        if(!root) return nums;
-        inorder(root->left, nums);
-        nums.push_back(root->val);
-        inorder(root->right, nums);
-        return nums;
-    }
+    void helper(TreeNode* root){
+        if(!root) return;
+        helper(root->left);
 
-    TreeNode* increasingBST(TreeNode* root) {
-        if(!root) return NULL;
-        vector<int> inorderTrav;
-        inorder(root, inorderTrav);
-        TreeNode* newRoot = new TreeNode(inorderTrav[0]);
-        TreeNode* curr = newRoot;
-        for(int i = 1; i<inorderTrav.size(); i++){
-            curr->right = new TreeNode(inorderTrav[i]);
-            curr = curr->right;
+        root->left = NULL;
+        if(prev){
+            prev->right = root;
+        }else{
+            head = root;
         }
+        prev = root;
 
-        return newRoot;
+        helper(root->right);
+    }
+    TreeNode* increasingBST(TreeNode* root) {
+        helper(root);
+        return head;
     }
 };
