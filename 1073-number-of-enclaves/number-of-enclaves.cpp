@@ -1,57 +1,36 @@
 class Solution {
-private:
-    void dfs(int r, int c, vector<vector<int>>& grid){
-        int n = grid.size();
-        int m = grid[0].size();
-
-        grid[r][c] = 0;
-
-        if(r+1 < n-1 && grid[r+1][c] == 1) dfs(r+1, c, grid);
-        if(r-1 > 0 && grid[r-1][c] == 1) dfs(r-1, c, grid);
-        if(c+1 < m-1 && grid[r][c+1] == 1) dfs(r, c+1, grid);
-        if(c-1 > 0 && grid[r][c-1] == 1) dfs(r, c-1, grid);
-
-        return;
-    }
 public:
     int numEnclaves(vector<vector<int>>& grid) {
-        int n = grid.size();
-        int m = grid[0].size();
+        int n = grid.size(), m = grid[0].size();
+        int land = 0;
+        queue<pair<int,int>> q;
 
-        int a = 0;
-        for(int j = 0; j<m; j++){
-            if(grid[a][j] == 1){
-                dfs(a,j,grid);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    land++;
+                    if (i == 0 || j == 0 || i == n-1 || j == m-1) {
+                        q.push({i, j});
+                        grid[i][j] = 0;
+                    }
+                }
             }
         }
 
-        a = n-1;
-        for(int j = 0; j<m; j++){
-            if(grid[a][j] == 1){
-                dfs(a,j,grid);
-            }
-        }
+        int dr[] = {1, -1, 0, 0};
+        int dc[] = {0, 0, 1, -1};
 
-        int b = 0;
-        for(int j = 0; j<n; j++){
-            if(grid[j][b] == 1){
-                dfs(j,b,grid);
+        while (!q.empty()) {
+            auto [r, c] = q.front(); q.pop();
+            land--;
+            for (int d = 0; d < 4; d++) {
+                int nr = r + dr[d], nc = c + dc[d];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 1) {
+                    grid[nr][nc] = 0;
+                    q.push({nr, nc});
+                }
             }
         }
-
-        b = m-1;
-        for(int j = 0; j<n; j++){
-            if(grid[j][b] == 1){
-                dfs(j,b,grid);
-            }
-        }
-
-        int ans = 0;
-        for(int i = 0; i<n; i++){
-            for(int j = 0; j<m; j++){
-                if(grid[i][j] == 1) ans++;
-            }
-        }
-        return ans;
+        return land;
     }
 };
