@@ -1,6 +1,7 @@
 class Solution {
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
+        int n = heights.size(), m = heights[0].size();
         const int INF = 1e9;
         vector<vector<int>> dist(heights.size(), vector<int>(heights[0].size(), INF));
         int dr[4] = {0,0,-1,1};
@@ -14,6 +15,8 @@ public:
             q.pop();
             int absDiff = t.first;
             auto [r, c] = t.second;
+            if(absDiff> dist[r][c]) continue;
+            if(r == n-1 && c == m-1) return absDiff;
 
             for(int i = 0; i<4; i++){
                 int nr = r + dr[i];
