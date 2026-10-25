@@ -52,14 +52,14 @@ public:
 
         vector<vector<string>> ans;
         for(int i = 0; i<n; i++){
-            if(mergeNode[i].size() == 0) continue;
-            sort(mergeNode[i].begin(), mergeNode[i].end());
+            if(mergeNode[i].size() == 0) continue; // due to compression there is a chance that there is a node which has no mails attatched to it
+            sort(mergeNode[i].begin(), mergeNode[i].end()); // sort the order of mails
             vector<string> temp;
-            temp.push_back(accounts[i][0]);
+            temp.push_back(accounts[i][0]); // push the name of the person
             for(auto it : mergeNode[i]){
-                temp.push_back(it);
+                temp.push_back(it); // push the mail ids 
             }
-            ans.push_back(temp);
+            ans.push_back(temp); // push the overall struc in ans
         }
 
         return ans;
