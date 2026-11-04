@@ -1,20 +1,28 @@
 class Solution {
-private:
-    int f(int i, int j, vector<vector<int>>& arr, vector<vector<int>>& dp){
-        if(i < 0 || j<0) return 0; // -ve idx edge case
-        if(arr[i][j] == 1) return 0; // obstacle at the start or any where
-        if(i == 0 && j == 0) return 1; // generic base case
-        if(dp[i][j]!=-1) return dp[i][j]; 
-        int up = f(i-1, j, arr, dp);
-        int left = f(i, j-1, arr, dp);
-        return dp[i][j] = up + left;
-        
-    }
 public:
-    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
-        int n = obstacleGrid.size();
-        int m = obstacleGrid[0].size();
-        vector<vector<int>> dp(n, vector<int>(m, -1));
-        return f(n-1, m-1, obstacleGrid, dp);
+    int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n =  arr.size();
+        int m = arr[0].size();
+        vector<int> prev(m, 0);
+        for(int j = 0; j<m; j++){
+            if(arr[0][j] == 1) break;
+            else prev[j] = 1;
+        }
+        for(int i = 1; i<n; i++){
+            vector<int> temp(m, 0);
+            for(int j = 0; j<m; j++){
+                if(arr[i][j] == 1){
+                    temp[j] = 0;
+                    continue;
+                }
+                int up = 0;
+                int left = 0;
+                up = prev[j];
+                if(j>0) left = temp[j-1];
+                temp[j] = up + left;
+            }
+            prev = temp;
+        }
+        return prev[m-1];
     }
 };
